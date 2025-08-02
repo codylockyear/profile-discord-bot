@@ -19,7 +19,7 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('skills')
                         .setDescription('Comma-separated list of your skills (e.g., Photoshop, Node.js, UI/UX).')
-                        .setRequired(false))))
+                        .setRequired(false)))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('view')
@@ -27,7 +27,7 @@ module.exports = {
                 .addUserOption(option =>
                     option.setName('user')
                         .setDescription('The user whose profile you want to view.')
-                        .setRequired(false)))),
+                        .setRequired(false))),
 
     async execute(interaction) {
         const UserProfile = interaction.client.userProfiles; // Corrected access
