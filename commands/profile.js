@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getUserProfileModel } = require('../database/models');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,7 +19,7 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('skills')
                         .setDescription('Comma-separated list of your skills (e.g., Photoshop, Node.js, UI/UX).')
-                        .setRequired(false)))
+                        .setRequired(false))))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('view')
@@ -28,10 +27,10 @@ module.exports = {
                 .addUserOption(option =>
                     option.setName('user')
                         .setDescription('The user whose profile you want to view.')
-                        .setRequired(false))),
+                        .setRequired(false)))),
 
     async execute(interaction) {
-        const UserProfile = getUserProfileModel();
+        const UserProfile = interaction.client.userProfiles; // Corrected access
         const subcommand = interaction.options.getSubcommand();
         const discordId = interaction.user.id;
 
