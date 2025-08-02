@@ -54,13 +54,15 @@ const sequelize = new Sequelize(process.env.DATABASE_URL || {
     logging: false, // Set to true for SQL query logging
 });
 
+const defineUserProfile = require('./database/models');
+client.userProfiles = defineUserProfile(sequelize);
+
 async function connectToDatabase() {
     try {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully.');
         // Synchronize models (create tables if they don't exist)
-        require('./database/models').initialize(sequelize);
-        await sequelize.sync();
+        await client.userProfiles.sync();
         console.log('All models were synchronized successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);

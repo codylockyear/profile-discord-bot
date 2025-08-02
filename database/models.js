@@ -1,9 +1,7 @@
 const { DataTypes } = require('sequelize');
 
-let UserProfile;
-
-function initialize(sequelize) {
-    UserProfile = sequelize.define('UserProfile', {
+module.exports = (sequelize) => {
+    const UserProfile = sequelize.define('UserProfile', {
         discordId: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -29,10 +27,5 @@ function initialize(sequelize) {
             },
         },
     });
-}
-
-function getUserProfileModel() {
     return UserProfile;
-}
-
-module.exports = { initialize, getUserProfileModel };
+};
