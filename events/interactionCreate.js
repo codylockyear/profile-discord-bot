@@ -15,18 +15,20 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                    content: 'There was an error while executing this command!',
-                    ephemeral: true
-                });
-            } else {
-                await interaction.reply({
-                    content: 'There was an error while executing this command!',
-                    ephemeral: true
-                });
+            console.error('Error executing command:', error);
+
+            const errorMessage = {
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            };
+
+            // Check if we can still respond
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply(errorMessage);
+            } else if (interaction.deferred) {
+                await interaction.editReply(errorMessage);
             }
+            // If already replied, we can't do anything more.
         }
     },
 };

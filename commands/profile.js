@@ -31,9 +31,11 @@ module.exports = {
                 .addUserOption(option =>
                     option.setName('user')
                         .setDescription('The user whose profile you want to view.')
-                        .setRequired(false))),
+                        .setRequired(false)))),
 
     async execute(interaction) {
+        await interaction.deferReply({ ephemeral: true }); // Defer reply immediately
+
         const UserProfile = interaction.client.userProfiles;
         const subcommand = interaction.options.getSubcommand();
         const discordId = interaction.user.id;
@@ -67,14 +69,14 @@ module.exports = {
                     }
                 }
 
-                await interaction.reply({
+                await interaction.editReply({
                     content: 'Your profile has been updated!',
                     ephemeral: true
                 });
 
             } catch (error) {
                 console.error('Error setting user profile:', error);
-                await interaction.reply({
+                await interaction.editReply({
                     content: 'There was an error while trying to set your profile. Please try again later.',
                     ephemeral: true
                 });
@@ -102,15 +104,15 @@ module.exports = {
                         timestamp: new Date().toISOString(),
                     };
 
-                    await interaction.reply({ embeds: [embed] });
+                    await interaction.editReply({ embeds: [embed] }); // Use editReply for embeds
                 } else {
-                    await interaction.reply({
+                    await interaction.editReply({
                         content: `${targetUser.displayName} does not have a profile set up yet.`, ephemeral: true
                     });
                 }
             } catch (error) {
                 console.error('Error viewing user profile:', error);
-                await interaction.reply({
+                await interaction.editReply({
                     content: 'There was an error while trying to retrieve the profile. Please try again later.',
                     ephemeral: true
                 });
