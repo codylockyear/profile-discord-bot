@@ -31,7 +31,7 @@ module.exports = {
                 .addUserOption(option =>
                     option.setName('user')
                         .setDescription('The user whose profile you want to view.')
-                        .setRequired(false)))),
+                        .setRequired(false))),
 
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true }); // Defer reply immediately
