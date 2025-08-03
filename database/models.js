@@ -26,6 +26,10 @@ module.exports = (sequelize) => {
                 this.setDataValue('skills', val.join(';'));
             },
         },
+        customDisplayName: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
     return UserProfile;
 };

@@ -19,6 +19,10 @@ module.exports = {
                 .addStringOption(option =>
                     option.setName('skills')
                         .setDescription('Comma-separated list of your skills (e.g., Photoshop, Node.js, UI/UX).')
+                        .setRequired(false))
+                .addStringOption(option =>
+                    option.setName('customname')
+                        .setDescription('A custom name to display on your profile (overrides Discord name).')
                         .setRequired(false)))
         .addSubcommand(subcommand =>
             subcommand
@@ -27,10 +31,10 @@ module.exports = {
                 .addUserOption(option =>
                     option.setName('user')
                         .setDescription('The user whose profile you want to view.')
-                        .setRequired(false))),
+                        .setRequired(false)))),
 
     async execute(interaction) {
-        const UserProfile = interaction.client.userProfiles; // Corrected access
+        const UserProfile = interaction.client.userProfiles;
         const subcommand = interaction.options.getSubcommand();
         const discordId = interaction.user.id;
 
@@ -38,6 +42,7 @@ module.exports = {
             const profession = interaction.options.getString('profession');
             const portfolio = interaction.options.getString('portfolio');
             const skills = interaction.options.getString('skills');
+            const customName = interaction.options.getString('customname');
 
             try {
                 const [profile, created] = await UserProfile.findOrCreate({
@@ -46,6 +51,7 @@ module.exports = {
                         profession: profession,
                         portfolio: portfolio,
                         skills: skills ? skills.split(',').map(s => s.trim()) : [],
+                        customDisplayName: customName,
                     },
                 });
 
@@ -54,6 +60,7 @@ module.exports = {
                     if (profession !== null) updateFields.profession = profession;
                     if (portfolio !== null) updateFields.portfolio = portfolio;
                     if (skills !== null) updateFields.skills = skills ? skills.split(',').map(s => s.trim()) : [];
+                    if (customName !== null) updateFields.customDisplayName = customName;
 
                     if (Object.keys(updateFields).length > 0) {
                         await profile.update(updateFields);
@@ -82,10 +89,11 @@ module.exports = {
                 if (profile) {
                     const skillsList = profile.skills.length > 0 ? profile.skills.join(', ') : 'Not specified';
                     const portfolioLink = profile.portfolio ? `[${profile.portfolio}](${profile.portfolio})` : 'Not specified';
+                    const displayedName = profile.customDisplayName || targetUser.displayName;
 
                     const embed = {
                         color: 0x0099ff,
-                        title: `${targetUser.displayName}'s Profile`,
+                        title: `${displayedName}'s Profile`,
                         fields: [
                             { name: 'Profession', value: profile.profession || 'Not specified' },
                             { name: 'Portfolio', value: portfolioLink },
